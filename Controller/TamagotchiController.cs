@@ -10,13 +10,13 @@ namespace Tamagotchi.Controller
         private TamagotchiView menu { get; }
         private PokemonApiService pokemonApiService { get; set; }
         private List<PokemonResult> especiesDisponiveis { get; set; }
-        private List<PokemonDetailsResult> mascotesAdotados { get; }
+        private List<TamagotchiDto> mascotesAdotados { get; set; }
 
 
         public TamagotchiController()
         {
             menu = new TamagotchiView();
-            mascotesAdotados = new List<PokemonDetailsResult>();
+            mascotesAdotados = new List<TamagotchiDto>();
         }
 
         public async Task InicializarPokemonApiServiceAsync()
@@ -33,7 +33,7 @@ namespace Tamagotchi.Controller
             while (true)
             {
                 menu.MostrarMenuPrincipal();
-                int escolha = menu.ObterEscolhaDoJogador();
+                int escolha = menu.ObterEscolhaDoJogador(4);
 
                 switch (escolha)
                 {
@@ -41,7 +41,7 @@ namespace Tamagotchi.Controller
                         while (true)
                         {
                             menu.MostrarMenuDeAdocao();
-                            escolha = menu.ObterEscolhaDoJogador();
+                            escolha = menu.ObterEscolhaDoJogador(4);
                             switch (escolha)
                             {
                                 case 1:
@@ -60,7 +60,10 @@ namespace Tamagotchi.Controller
                                     menu.MostrarDetalhesDaEspecie(detalhes);
                                     if (menu.ConfirmarAdocao())
                                     {
-                                        mascotesAdotados.Add(detalhes);
+                                        TamagotchiDto mascoteAdotado = new TamagotchiDto();
+                                        mascoteAdotado.AtualizarPropriedades(detalhes);
+                                        mascotesAdotados.Add(mascoteAdotado);
+
                                         Console.WriteLine("Parabéns! Você adotou um " + detalhes.Name + "!");
                                         Console.WriteLine("──────────────");
                                         Console.WriteLine("────▄████▄────");
@@ -81,9 +84,46 @@ namespace Tamagotchi.Controller
                         }
                         break;
                     case 2:
+
+                        if (mascotesAdotados.Count == 0)
+                        {
+                            Console.WriteLine("Você não tem nenhum mascote adotado.");
+                            break;
+                        }
+
                         menu.MostrarMascotesAdotados(mascotesAdotados);
+
+                        Console.WriteLine("Escolha um mascote para interagir:");
+                        int indiceMascote = menu.ObterEscolhaDoJogador(mascotesAdotados.Count) - 1;
+
+                        var mascoteEscolhido = mascotesAdotados[indiceMascote];
+
+                        int opcaoIteracao = 0;
+
+                        while (opcaoIteracao != 4)
+                        {
+
+                            menu.MostrarMenuInteracao();
+                            opcaoIteracao = menu.ObterEscolhaDoJogador(4);
+
+                            switch (opcaoIteracao)
+                            {
+                                case 1:
+                                    mascoteEscolhido.MostrarStatus(); ;
+                                    break;
+                                case 2:
+                                    mascoteEscolhido.Alimentar();
+                                    break;
+                                case 3:
+                                    mascoteEscolhido.Brincar();
+                                    break;
+                            }
+                        }
                         break;
                     case 3:
+                        menu.MostrarMascotesAdotados(mascotesAdotados);
+                        break;
+                    case 4:
                         Console.WriteLine("Obrigado por jogar! Até a próxima!");
                         return;
                 }
