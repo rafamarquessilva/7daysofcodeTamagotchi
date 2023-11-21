@@ -1,4 +1,5 @@
-﻿using Tamagotchi.Model;
+﻿using AutoMapper;
+using Tamagotchi.Model;
 using Tamagotchi.Service;
 using Tamagotchi.View;
 
@@ -12,11 +13,19 @@ namespace Tamagotchi.Controller
         private List<PokemonResult> especiesDisponiveis { get; set; }
         private List<TamagotchiDto> mascotesAdotados { get; set; }
 
+        IMapper mapper { get; set; }
 
         public TamagotchiController()
         {
             menu = new TamagotchiView();
             mascotesAdotados = new List<TamagotchiDto>();
+
+            var config = new MapperConfiguration(cfg => {
+                cfg.AddProfile<AutoMapperProfile>();
+            });
+
+            mapper = config.CreateMapper();
+
         }
 
         public async Task InicializarPokemonApiServiceAsync()
@@ -60,9 +69,9 @@ namespace Tamagotchi.Controller
                                     menu.MostrarDetalhesDaEspecie(detalhes);
                                     if (menu.ConfirmarAdocao())
                                     {
-                                        TamagotchiDto mascoteAdotado = new TamagotchiDto();
-                                        mascoteAdotado.AtualizarPropriedades(detalhes);
-                                        mascotesAdotados.Add(mascoteAdotado);
+                                        TamagotchiDto tamagotchi = mapper.Map<TamagotchiDto>(detalhes);
+
+                                        mascotesAdotados.Add(tamagotchi);
 
                                         Console.WriteLine("Parabéns! Você adotou um " + detalhes.Name + "!");
                                         Console.WriteLine("──────────────");
