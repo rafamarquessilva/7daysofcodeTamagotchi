@@ -109,11 +109,11 @@ namespace Tamagotchi.Controller
 
                         int opcaoIteracao = 0;
 
-                        while (opcaoIteracao != 4)
+                        while (opcaoIteracao != 6)
                         {
 
                             menu.MostrarMenuInteracao();
-                            opcaoIteracao = menu.ObterEscolhaDoJogador(4);
+                            opcaoIteracao = menu.ObterEscolhaDoJogador(6);
 
                             switch (opcaoIteracao)
                             {
@@ -125,6 +125,12 @@ namespace Tamagotchi.Controller
                                     break;
                                 case 3:
                                     mascoteEscolhido.Brincar();
+                                    break;
+                                case 4:
+                                    mascoteEscolhido.Descansar();
+                                    break;
+                                case 5:
+                                    mascoteEscolhido.DarCarinho();
                                     break;
                             }
                         }

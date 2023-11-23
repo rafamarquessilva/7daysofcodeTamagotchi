@@ -119,7 +119,9 @@ namespace Tamagotchi.View
             Console.WriteLine("1. Saber como o mascote está");
             Console.WriteLine("2. Alimentar o mascote");
             Console.WriteLine("3. Brincar com o mascote");
-            Console.WriteLine("4. Voltar");
+            Console.WriteLine("4. Descansar");
+            Console.WriteLine("5. Dar carinho");
+            Console.WriteLine("6. Voltar");
             Console.Write("Escolha uma opção: ");
         }
     }
